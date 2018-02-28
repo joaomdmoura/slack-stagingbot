@@ -18,6 +18,15 @@ class Database
 end
 
 class StagingBot < SlackRubyBot::Bot
+  command 'commands' do |client, data, match|
+    client.say(text:
+      'Available commands are:'\
+      ' - `use staging [1-4]`'\
+      ' - `release staging [1-4]`'\
+      ' - `servers`'\
+    , channel: data.channel)
+  end
+
   command /use staging [1-5]/ do |client, data, match|
     begin
       staging_number = /[1-5]/.match(match['command']).to_s

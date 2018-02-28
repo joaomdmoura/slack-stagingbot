@@ -54,15 +54,15 @@ class StagingBot < SlackRubyBot::Bot
   command 'servers' do |client, data, match|
     staging_number = /[1-5]/.match(match['command']).to_s
     stagings = []
-    (1..4).to_a.each do |s|
+    (2..5).to_a.each do |s|
       stagings << Database.staging(s)
     end
 
     client.say(text: "
-- staging 2: #{(stagings[2]) ? "<@#{stagings[2]}>" : "Available"}
-- staging 3: #{(stagings[3]) ? "<@#{stagings[3]}>" : "Available"}
-- staging 4: #{(stagings[4]) ? "<@#{stagings[4]}>" : "Available"}
-- staging 5: #{(stagings[5]) ? "<@#{stagings[5]}>" : "Available"}
+- staging 2: #{(stagings[0]) ? "<@#{stagings[0]}>" : "Available"}
+- staging 3: #{(stagings[1]) ? "<@#{stagings[1]}>" : "Available"}
+- staging 4: #{(stagings[2]) ? "<@#{stagings[2]}>" : "Available"}
+- staging 5: #{(stagings[3]) ? "<@#{stagings[3]}>" : "Available"}
     ", channel: data.channel)
   end
 end

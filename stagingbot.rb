@@ -18,9 +18,9 @@ class Database
 end
 
 class StagingBot < SlackRubyBot::Bot
-  command /use staging [1-4]/ do |client, data, match|
+  command /use staging [1-5]/ do |client, data, match|
     begin
-      staging_number = /[1-4]/.match(match['command']).to_s
+      staging_number = /[1-5]/.match(match['command']).to_s
       user = Database.staging(staging_number)
 
       if user
@@ -32,9 +32,9 @@ class StagingBot < SlackRubyBot::Bot
     end
   end
 
-  command /release staging [1-4]/ do |client, data, match|
+  command /release staging [1-5]/ do |client, data, match|
     begin
-      staging_number = /[1-4]/.match(match['command']).to_s
+      staging_number = /[1-5]/.match(match['command']).to_s
       user = Database.staging(staging_number)
 
       if user != data.user
@@ -47,7 +47,7 @@ class StagingBot < SlackRubyBot::Bot
   end
 
   command 'servers' do |client, data, match|
-    staging_number = /[1-4]/.match(match['command']).to_s
+    staging_number = /[1-5]/.match(match['command']).to_s
     stagings = []
     (1..4).to_a.each do |s|
       stagings << Database.staging(s)
@@ -58,6 +58,7 @@ class StagingBot < SlackRubyBot::Bot
 - staging 2: #{(stagings[1]) ? "<@#{stagings[1]}>" : "Available"}
 - staging 3: #{(stagings[2]) ? "<@#{stagings[2]}>" : "Available"}
 - staging 4: #{(stagings[3]) ? "<@#{stagings[3]}>" : "Available"}
+- staging 5: #{(stagings[4]) ? "<@#{stagings[4]}>" : "Available"}
     ", channel: data.channel)
   end
 end

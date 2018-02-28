@@ -20,10 +20,10 @@ end
 class StagingBot < SlackRubyBot::Bot
   command 'commands' do |client, data, match|
     client.say(text:
-      'Available commands are: \n'\
-      ' - `use staging [1-4]`\n'\
-      ' - `release staging [1-4]`\n'\
-      ' - `servers`'\
+      'Available commands are:'\
+      ' `use staging [1-4]`'\
+      ' `release staging [1-4]`'\
+      ' `servers`'\
     , channel: data.channel)
   end
 

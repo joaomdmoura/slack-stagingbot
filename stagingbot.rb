@@ -2,11 +2,11 @@ require 'yaml/store'
 require 'slack-ruby-bot'
 
 class Database
+  attr_accessor :file
   DATABASE = YAML::Store.new('stagingbot_db.yml')
 
   def self.staging(number)
-    database = YAML.load_file('stagingbot_db.yml')
-    database["staging_usage"][number.to_i]
+    file["staging_usage"][number.to_i]
   end
 
   def self.save_staging_usage(number, user)
@@ -14,6 +14,10 @@ class Database
       DATABASE["staging_usage"] ||= []
       DATABASE["staging_usage"][number.to_i] = user
     end
+  end
+
+  def file
+    @file ||= YAML.load_file('stagingbot_db.yml')
   end
 end
 

@@ -1,1 +1,1 @@
-app: bundle exec ruby stagingbot.rb
+worker: bundle exec ruby stagingbot.rb

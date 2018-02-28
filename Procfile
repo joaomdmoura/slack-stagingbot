@@ -1,1 +1,1 @@
-web: bundle exec ruby stagingbot.rb
+console: bundle exec ruby stagingbot.rb

@@ -21,37 +21,33 @@ class StagingBot < SlackRubyBot::Bot
   command 'commands' do |client, data, match|
     client.say(text:
       'Available commands are:'\
-      ' `use staging [1-4]`'\
-      ' `release staging [1-4]`'\
+      ' `use staging [2-4]`'\
+      ' `release staging [2-4]`'\
       ' `servers`'\
     , channel: data.channel)
   end
 
-  command /use staging [1-5]/ do |client, data, match|
-    begin
-      staging_number = /[1-5]/.match(match['command']).to_s
-      user = Database.staging(staging_number)
+  command /use staging [2-5]/ do |client, data, match|
+    staging_number = /[2-5]/.match(match['command']).to_s
+    user = Database.staging(staging_number)
 
-      if user
-        client.say(text: "I'm sorry <@#{data.user}>, but staging #{staging_number} is reserved to <@#{user}>.", channel: data.channel)
-      else
-        Database.save_staging_usage(staging_number, data.user)
-        client.say(text: "Okay <@#{data.user}>, staging #{staging_number} is reserved to you.", channel: data.channel)
-      end
+    if user
+      client.say(text: "I'm sorry <@#{data.user}>, but staging #{staging_number} is reserved to <@#{user}>.", channel: data.channel)
+    else
+      Database.save_staging_usage(staging_number, data.user)
+      client.say(text: "Okay <@#{data.user}>, staging #{staging_number} is reserved to you.", channel: data.channel)
     end
   end
 
-  command /release staging [1-5]/ do |client, data, match|
-    begin
-      staging_number = /[1-5]/.match(match['command']).to_s
-      user = Database.staging(staging_number)
+  command /release staging [2-5]/ do |client, data, match|
+    staging_number = /[2-5]/.match(match['command']).to_s
+    user = Database.staging(staging_number)
 
-      if user != data.user
-        client.say(text: "I'm sorry <@#{data.user}>, you can't release staging #{staging_number} because <@#{user}> is the one that reserved it.", channel: data.channel)
-      else
-        Database.save_staging_usage(staging_number, nil)
-        client.say(text: "Okay <@#{data.user}>, staging #{staging_number} is released.", channel: data.channel)
-      end
+    if user != data.user
+      client.say(text: "I'm sorry <@#{data.user}>, you can't release staging #{staging_number} because <@#{user}> is the one that reserved it.", channel: data.channel)
+    else
+      Database.save_staging_usage(staging_number, nil)
+      client.say(text: "Okay <@#{data.user}>, staging #{staging_number} is released.", channel: data.channel)
     end
   end
 
@@ -63,7 +59,6 @@ class StagingBot < SlackRubyBot::Bot
     end
 
     client.say(text: "
-- staging 1: #{(stagings[0]) ? "<@#{stagings[0]}>" : "Available"}
 - staging 2: #{(stagings[1]) ? "<@#{stagings[1]}>" : "Available"}
 - staging 3: #{(stagings[2]) ? "<@#{stagings[2]}>" : "Available"}
 - staging 4: #{(stagings[3]) ? "<@#{stagings[3]}>" : "Available"}

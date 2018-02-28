@@ -50,10 +50,10 @@ class StagingBot < SlackRubyBot::Bot
     end
 
     client.say(text: "
-- staging 1: #{(stagings[0]) ? stagings[0]: "Available"}
-- staging 2: #{(stagings[1]) ? stagings[1]: "Available"}
-- staging 3: #{(stagings[2]) ? stagings[2]: "Available"}
-- staging 4: #{(stagings[3]) ? stagings[3]: "Available"}
+- staging 1: #{(stagings[0]) ? "<@#{stagings[0]}>" : "Available"}
+- staging 2: #{(stagings[1]) ? "<@#{stagings[1]}>" : "Available"}
+- staging 3: #{(stagings[2]) ? "<@#{stagings[2]}>" : "Available"}
+- staging 4: #{(stagings[3]) ? "<@#{stagings[3]}>" : "Available"}
     ", channel: data.channel)
   end
 end

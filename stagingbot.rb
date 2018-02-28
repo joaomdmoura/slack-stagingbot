@@ -5,7 +5,7 @@ class Database
   DATABASE = YAML::Store.new('stagingbot_db.yml')
 
   def self.staging(number)
-    database = file
+    database = YAML.load_file('stagingbot_db.yml')
     database["staging_usage"][number.to_i]
   end
 

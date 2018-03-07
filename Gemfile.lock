@@ -40,6 +40,7 @@ GEM
     minitest (5.11.3)
     multipart-post (2.0.0)
     nio4r (2.2.0)
+    pg (0.21.0)
     slack-ruby-bot (0.10.5)
       hashie
       slack-ruby-client (>= 0.6.0)
@@ -64,6 +65,7 @@ PLATFORMS
 
 DEPENDENCIES
   celluloid-io
+  pg
   slack-ruby-bot
 
 BUNDLED WITH

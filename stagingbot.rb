@@ -1,8 +1,10 @@
 require 'yaml/store'
 require 'slack-ruby-bot'
+require 'pg'
 
 class Database
   DATABASE = YAML::Store.new('stagingbot_db.yml')
+  # DATABASE = PG.connect(ENV['DATABASE_URL']
 
   def self.staging(number)
     database = YAML.load_file('stagingbot_db.yml')

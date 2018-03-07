@@ -1,21 +1,34 @@
-require 'yaml/store'
+# Instructions
+# --------------------------------
+#
+# 1. Create a table
+#
+# ```
+#   DATABASE = PG.connect(ENV['DATABASE_URL'])
+#   DATABASE.exec "CREATE TABLE stagings(id INTEGER PRIMARY KEY, number INT, owner VARCHAR(100))"
+# ```
+#
+# 2. Create existing stagings
+#
+# ```
+# DATABASE.exec "INSERT INTO stagings VALUES(1,2, NULL)"
+# DATABASE.exec "INSERT INTO stagings VALUES(2,3, NULL)"
+# DATABASE.exec "INSERT INTO stagings VALUES(3,4, NULL)"
+# DATABASE.exec "INSERT INTO stagings VALUES(4,5, NULL)"
+# ```
+# ==========================================
 require 'slack-ruby-bot'
 require 'pg'
 
 class Database
-  DATABASE = YAML::Store.new('stagingbot_db.yml')
-  # DATABASE = PG.connect(ENV['DATABASE_URL']
-
   def self.staging(number)
-    database = YAML.load_file('stagingbot_db.yml')
-    database["staging_usage"][number.to_i]
+    conn = PG.connect(ENV['DATABASE_URL'])
+    (conn.exec "SELECT * FROM stagings WHERE number =#{number.to_i} LIMIT 1").first
   end
 
   def self.save_staging_usage(number, user)
-    DATABASE.transaction do
-      DATABASE["staging_usage"] ||= []
-      DATABASE["staging_usage"][number.to_i] = user
-    end
+    conn = PG.connect(ENV['DATABASE_URL'])
+    (conn.exec "UPDATE stagings SET owner=#{user} WHERE number =#{number.to_i}").first
   end
 end
 

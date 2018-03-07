@@ -28,7 +28,7 @@ class Database
 
   def self.save_staging_usage(number, user)
     conn = PG.connect(ENV['DATABASE_URL'])
-    (conn.exec "UPDATE stagings SET owner=#{user} WHERE number =#{number.to_i}").first
+    (conn.exec "UPDATE stagings SET owner='#{user}' WHERE number =#{number.to_i}").first
   end
 end
 
@@ -46,7 +46,7 @@ class StagingBot < SlackRubyBot::Bot
     staging_number = /[2-5]/.match(match['command']).to_s
     user = Database.staging(staging_number)["owner"]
 
-    if user
+    if !user.empty? && user
       client.say(text: "I'm sorry <@#{data.user}>, but staging #{staging_number} is reserved to <@#{user}>.", channel: data.channel)
     else
       Database.save_staging_usage(staging_number, data.user)
@@ -74,10 +74,10 @@ class StagingBot < SlackRubyBot::Bot
     end
 
     client.say(text: "
-- staging 2: #{(stagings[0]) ? "<@#{stagings[0]}>" : "Available"}
-- staging 3: #{(stagings[1]) ? "<@#{stagings[1]}>" : "Available"}
-- staging 4: #{(stagings[2]) ? "<@#{stagings[2]}>" : "Available"}
-- staging 5: #{(stagings[3]) ? "<@#{stagings[3]}>" : "Available"}
+- staging 2: #{(stagings[0] && stagings[0] != '') ? "<@#{stagings[0]}>" : "Available"}
+- staging 3: #{(stagings[1] && stagings[1] != '') ? "<@#{stagings[1]}>" : "Available"}
+- staging 4: #{(stagings[2] && stagings[2] != '') ? "<@#{stagings[2]}>" : "Available"}
+- staging 5: #{(stagings[3] && stagings[3] != '') ? "<@#{stagings[3]}>" : "Available"}
     ", channel: data.channel)
   end
 end

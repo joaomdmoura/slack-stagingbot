@@ -44,7 +44,7 @@ class StagingBot < SlackRubyBot::Bot
 
   command /use staging [2-5]/ do |client, data, match|
     staging_number = /[2-5]/.match(match['command']).to_s
-    user = Database.staging(staging_number)
+    user = Database.staging(staging_number)["owner"]
 
     if user
       client.say(text: "I'm sorry <@#{data.user}>, but staging #{staging_number} is reserved to <@#{user}>.", channel: data.channel)
@@ -56,7 +56,7 @@ class StagingBot < SlackRubyBot::Bot
 
   command /release staging [2-5]/ do |client, data, match|
     staging_number = /[2-5]/.match(match['command']).to_s
-    user = Database.staging(staging_number)
+    user = Database.staging(staging_number)["owner"]
 
     if user != data.user
       client.say(text: "I'm sorry <@#{data.user}>, you can't release staging #{staging_number} because <@#{user}> is the one that reserved it.", channel: data.channel)
@@ -70,7 +70,7 @@ class StagingBot < SlackRubyBot::Bot
     staging_number = /[1-5]/.match(match['command']).to_s
     stagings = []
     (2..5).to_a.each do |s|
-      stagings << Database.staging(s)
+      stagings << Database.staging(s)["owner"]
     end
 
     client.say(text: "

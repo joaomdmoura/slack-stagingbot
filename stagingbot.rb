@@ -23,12 +23,16 @@ require 'pg'
 class Database
   def self.staging(number)
     conn = PG.connect(ENV['DATABASE_URL'])
-    (conn.exec "SELECT * FROM stagings WHERE number =#{number.to_i} LIMIT 1").first
+    staging = (conn.exec "SELECT * FROM stagings WHERE number =#{number.to_i} LIMIT 1").first
+    conn.close
+    return staging
   end
 
   def self.save_staging_usage(number, user)
     conn = PG.connect(ENV['DATABASE_URL'])
-    (conn.exec "UPDATE stagings SET owner='#{user}' WHERE number =#{number.to_i}").first
+    staging = (conn.exec "UPDATE stagings SET owner='#{user}' WHERE number =#{number.to_i}").first
+    conn.close
+    return staging
   end
 end
 
@@ -46,7 +50,7 @@ class StagingBot < SlackRubyBot::Bot
     staging_number = /[2-5]/.match(match['command']).to_s
     user = Database.staging(staging_number)["owner"]
 
-    if !user.empty? && user
+    if user && !user.empty?
       client.say(text: "I'm sorry <@#{data.user}>, but staging #{staging_number} is reserved to <@#{user}>.", channel: data.channel)
     else
       Database.save_staging_usage(staging_number, data.user)
